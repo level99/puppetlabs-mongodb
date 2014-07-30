@@ -1,20 +1,14 @@
 # PRIVATE CLASS: do not use directly
 class mongodb::params inherits mongodb::globals {
 
-  $version              = $::mongodb::globals::version
-  $manage_package_repo  = $::mongodb::globals::manage_package_repo
-
-  $package_version = $version ? {
-    undef   => '',
-    default => "-${version}",
-  }
+  $manage_package_repo = $::mongodb::globals::manage_package_repo
 
   # Amazon Linux's OS Family is 'Linux', operating system 'Amazon'.
   case $::osfamily {
     'RedHat', 'Linux': {
       if $manage_package_repo {
 
-        $package_name   = "mongodb-org-server${package_version}"
+        $package_name   = 'mongodb-org-server'
         $config         = '/etc/mongod.conf'
         $dbpath         = '/var/lib/mongodb'
         $logpath        = '/var/log/mongodb/mongod.log'
@@ -37,14 +31,14 @@ class mongodb::params inherits mongodb::globals {
 
         # NOTE: use of globals is deprecated for the following vars
         $service_name = pick($::mongodb::globals::service_name, 'mongod')
-        $package_name = pick($::mongodb::globals::server_package_name, "mongodb-server${package_version}")
+        $package_name = pick($::mongodb::globals::server_package_name, 'mongodb-server')
       }
     }
 
     'Debian': {
       if $manage_package_repo {
 
-        $package_name   = "mongodb-org-server${package_version}"
+        $package_name   = 'mongodb-org-server'
         $config         = '/etc/mongod.conf'
         $dbpath         = '/var/lib/mongodb'
         $logpath        = '/var/log/mongodb/mongodb.log'
@@ -65,7 +59,7 @@ class mongodb::params inherits mongodb::globals {
 
         # NOTE: use of globals is deprecated for the following vars
         $service_name   = pick($::mongodb::globals::service_name, 'mongodb')
-        $package_name   = pick($::mongodb::globals::server_package_name, "mongodb-server${package_version}")
+        $package_name   = pick($::mongodb::globals::server_package_name, 'mongodb-server')
       }
 
       # avoid using fork because of the init scripts design

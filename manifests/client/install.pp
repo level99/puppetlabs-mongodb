@@ -2,13 +2,17 @@
 class mongodb::client::install {
 
   $manage_package_repo  = $::mongodb::globals::manage_package_repo
+  $version              = $::mongodb::globals::version
 
   $ensure               = $::mongodb::client::ensure
   $package_name         = $::mongodb::client::package_name
 
   case $ensure {
     true:     {
-      $package_ensure = 'present'
+      $package_ensure = $version ? {
+        undef   => 'present',
+        default => $version,
+      }
     }
     false:    {
       $package_ensure = 'purged'

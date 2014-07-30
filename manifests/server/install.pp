@@ -2,6 +2,7 @@
 class mongodb::server::install {
 
   $manage_package_repo  = $::mongodb::globals::manage_package_repo
+  $version              = $::mongodb::globals::version
 
   $package_ensure       = $::mongodb::server::package_ensure
   $package_name         = $::mongodb::server::package_name
@@ -9,6 +10,10 @@ class mongodb::server::install {
   case $package_ensure {
     true:     {
       $my_package_ensure  = 'present'
+      $my_package_ensure = $version ? {
+        undef   => 'present',
+        default => $version,
+      }
       $file_ensure        = 'directory'
     }
     false:    {
